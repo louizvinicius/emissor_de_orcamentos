@@ -1,8 +1,7 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 from tkinter import PhotoImage
 import os
-from tkinter import Entry
 from docx import Document
 from datetime import datetime
 from docx2pdf import convert
@@ -15,20 +14,27 @@ def limpar_campos():
     entry_vendedor.delete(0, tk.END)
     entry_nome_arquivo.delete(0, tk.END)
 
-#ATUALIZAÇÕES
 def salvar_dados():
     nome_arquivo = entry_nome_arquivo.get()
     if not nome_arquivo.endswith(".docx"):
         nome_arquivo += ".docx"
     
+    # Abre a janela para escolher o local e nome do arquivo
+    caminho_arquivo = filedialog.asksaveasfilename(defaultextension=".docx", 
+                                                   filetypes=[("Documentos Word", "*.docx")],
+                                                   initialfile=nome_arquivo)
+    
+    if not caminho_arquivo:
+        return  # Se o usuário cancelar, não faz nada
+
     try:
         documento = Document("Orçamento.docx")
 
         referencias = {
-            "AAAA": opcao_selecionada.get(),  # Supondo que precise adicionar o nome da grama
+            "AAAA": opcao_selecionada.get(),
             "BBBB": entry_preco.get(),
             "CCCC": entry_cidade.get(),
-            "DDDD": opcao_selecionada_area.get(),  # Supondo que precise adicionar a área
+            "DDDD": opcao_selecionada_area.get(),
             "EEEE": entry_entrega1.get(),
             "FFFF": entry_entrega2.get(),
             "GGGG": entry_vendedor.get()
@@ -40,22 +46,18 @@ def salvar_dados():
                     paragrafo.text = paragrafo.text.replace(codigo, referencias[codigo])
 
         # Salva o documento Word
-        documento.save(nome_arquivo)
+        documento.save(caminho_arquivo)
         
         # Converte o documento para PDF
-        convert(nome_arquivo)
+        convert(caminho_arquivo)
 
-        messagebox.showinfo("Sucesso", f"Dados salvos com sucesso em '{nome_arquivo}' e convertido para PDF!")
+        messagebox.showinfo("Sucesso", f"Dados salvos com sucesso em '{caminho_arquivo}' e convertido para PDF!")
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao salvar os dados: {e}")
 
 # Configuração da janela principal
 root = tk.Tk()
 root.title("Orçamento Alves Gramas")
-
-# Adicionar o ícone
-icon = PhotoImage(file='icon.png')  # Substitua 'icon.png' pelo caminho do seu ícone
-root.iconphoto(True, icon)
 
 # Criando os widgets
 label_grama = tk.Label(root, text="Grama:")
