@@ -1,10 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox, filedialog
-from tkinter import PhotoImage
-import os
 from docx import Document
-from datetime import datetime
-from docx2pdf import convert
+import os
+import win32com.client
 
 def limpar_campos():
     entry_preco.delete(0, tk.END)
@@ -19,13 +17,12 @@ def salvar_dados():
     if not nome_arquivo.endswith(".docx"):
         nome_arquivo += ".docx"
     
-    # Abre a janela para escolher o local e nome do arquivo
     caminho_arquivo = filedialog.asksaveasfilename(defaultextension=".docx", 
-                                                   filetypes=[("Documentos Word", "*.docx")],
+                                                   filetypes=[("Word Files", "*.docx")],
                                                    initialfile=nome_arquivo)
     
     if not caminho_arquivo:
-        return  # Se o usuário cancelar, não faz nada
+        return
 
     try:
         documento = Document("Orçamento.docx")
@@ -48,10 +45,19 @@ def salvar_dados():
         # Salva o documento Word
         documento.save(caminho_arquivo)
         
-        # Converte o documento para PDF
-        convert(caminho_arquivo)
+        # Converte o documento para PDF usando o Microsoft Word via COM
+        caminho_arquivo_absoluto = os.path.abspath(caminho_arquivo)
+        caminho_pdf = caminho_arquivo_absoluto.replace(".docx", ".pdf")
+        try:
+            word = win32com.client.Dispatch("Word.Application")
+            doc = word.Documents.Open(caminho_arquivo_absoluto)
+            doc.SaveAs(caminho_pdf, FileFormat=17)  # 17 é o código para PDF
+            doc.Close()
+            word.Quit()
+            messagebox.showinfo("Sucesso", f"Dados salvos e convertidos para PDF com sucesso: '{caminho_pdf}'")
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao converter o arquivo para PDF: {e}")
 
-        messagebox.showinfo("Sucesso", f"Dados salvos com sucesso em '{caminho_arquivo}' e convertido para PDF!")
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao salvar os dados: {e}")
 
