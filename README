@@ -1,14 +1,15 @@
-# Emissor de Orçamentos
-Gerador exclusivo para Alves Gramas
+# Emissor de Orçamentos #
+## Sistema exclusivo para Alves Gramas.
 
-Intuito do projeto:
-A ideia principal era acelerar o processo de edição de nota. Antes do sistema, funcionários acessavam a ferramenta Microsoft Word,
-editavam o texto linha a linha e enviavam por WhatsApp.
-Agora tudo o que é preciso é abrir o sistema e adicionar as informações necessárias. Após isso, o sistema gera um arquivo PDF pronto para
-ser enviado ao cliente, de forma eficiente e profissional.
+**Intuito do projeto:**
 
-Bibliotecas utilizadas:
-- tkinter
-- python-docx
-- os
-- pywin32"
+A ideia principal era acelerar o processo de edição de notas. Antes do sistema, o trabalho era feito através da ferramenta Microsoft Word,
+onde os funcionários editavam o texto linha a linha e enviavam por WhatsApp. 
+Agora, tudo o que é preciso é abrir o sistema e adicionar as informações necessárias. Após isso, 
+o sistema gera um arquivo PDF pronto para ser enviado ao cliente, de forma eficiente e profissional.
+
+**Bibliotecas utilizadas:**
+- `tkinter`
+- `python-docx`
+- `os`
+- `pywin32`"
